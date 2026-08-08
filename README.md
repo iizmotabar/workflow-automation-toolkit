@@ -8,34 +8,7 @@ Most teams have leads sitting in a form submission for hours before anyone follo
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    A[Form submission] --> B[Webhook trigger - fires instantly, no polling]
-    B --> C[Clearbit: enrich company data]
-    C --> D[company_size, industry, annual_revenue]
-    D --> E[Custom GPT: score lead]
-    E --> F[score 1-10 + reasoning]
-    F --> G{score >= 7?}
-
-    G -->|Yes, high intent| H[HubSpot: create deal, stage = sales_qualified]
-    H --> I[Slack alert to #sales-alerts with score + reasoning]
-
-    G -->|No, low intent| J[HubSpot: add to nurture sequence list]
-
-    I -.rep feedback on lead quality.-> K[Prompt tuning]
-    K -.adjusts fit criteria, not threshold.-> E
-
-    classDef trigger fill:#F5F4FA,stroke:#644aab,color:#333
-    classDef enrich fill:#fff3cd,stroke:#d35400,color:#333
-    classDef decision fill:#e0f2f1,stroke:#00796b,color:#333
-    classDef highIntent fill:#e8f5e9,stroke:#1e8449,color:#333
-    classDef lowIntent fill:#eceff1,stroke:#607d8b,color:#333
-    class A,B trigger
-    class C,D,E,F enrich
-    class G decision
-    class H,I highIntent
-    class J lowIntent
-```
+![Architecture diagram](diagram.svg)
 
 The feedback loop at the bottom is intentional: when sales flags a lead as a bad fit despite scoring high, the fix is tightening the fit criteria written into the prompt, not lowering the score threshold. Lowering the threshold just moves the same problem to a different score band.
 
