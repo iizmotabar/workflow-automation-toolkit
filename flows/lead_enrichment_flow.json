@@ -1,0 +1,55 @@
+{
+  "name": "Lead Enrichment and Routing",
+  "trigger": {
+    "type": "webhook",
+    "source": "form_submission",
+    "fields": ["name", "email", "company_domain", "message"]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "module": "Clearbit - Enrich Company",
+      "input": "{{trigger.company_domain}}",
+      "output": ["company_size", "industry", "annual_revenue"]
+    },
+    {
+      "step": 2,
+      "module": "OpenAI - Score Lead",
+      "prompt_ref": "prompts/custom_gpt_lead_qualifier.md",
+      "input": {
+        "company_size": "{{step1.company_size}}",
+        "industry": "{{step1.industry}}",
+        "message": "{{trigger.message}}"
+      },
+      "output": ["score", "reasoning"]
+    },
+    {
+      "step": 3,
+      "module": "Router",
+      "condition": "step2.score >= 7",
+      "branches": {
+        "high_intent": [
+          {
+            "module": "HubSpot - Create Deal",
+            "input": {
+              "contact_email": "{{trigger.email}}",
+              "company": "{{trigger.company_domain}}",
+              "deal_stage": "sales_qualified"
+            }
+          },
+          {
+            "module": "Slack - Send Message",
+            "channel": "#sales-alerts",
+            "message": "New high intent lead: {{trigger.name}} from {{trigger.company_domain}}, score {{step2.score}}/10. Reasoning: {{step2.reasoning}}"
+          }
+        ],
+        "low_intent": [
+          {
+            "module": "HubSpot - Add to List",
+            "list_name": "Nurture Sequence"
+          }
+        ]
+      }
+    }
+  ]
+}
