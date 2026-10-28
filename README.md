@@ -1,6 +1,6 @@
 # Workflow Automation Toolkit
 
-Automation flows and AI prompt templates for the lead handling and reporting work that shouldn't need a human doing it manually. Built around Make and n8n, the tools I use for this at [motabar.builds.stuff](https://motabar.builds.stuff).
+Automation flows and AI prompt templates for the lead handling and reporting work that shouldn't need a human doing it manually. Built around Make and n8n, the tools I use for this at [motabar.builds.stuff](https://motabarbuildstuff.com/).
 
 ## The problem this solves
 
@@ -35,3 +35,10 @@ A five-tier scoring system sounds more sophisticated but in practice just moves 
 ## Stack
 
 Make, n8n, Clearbit API, OpenAI API, Slack, HubSpot
+
+## Related
+
+* Case study: [Cold Outreach Workflow Automation](https://motabarbuildstuff.com/case-studies/cold-outreach-workflow-automation/)
+* Service: [All analytics and tracking services](https://motabarbuildstuff.com/services/)
+
+Built by [Motabar Javaid](https://motabarbuildstuff.com/about/), analytics engineer at [motabar.builds.stuff](https://motabarbuildstuff.com/).
